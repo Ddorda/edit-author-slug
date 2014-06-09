@@ -261,12 +261,36 @@ function ba_eas_do_role_based_author_base() {
  * @return string Author archive link
  */
 function ba_eas_author_link( $link = '', $user_id = 0, $nicename = '' ) {
+	global $wp_filter;
+
+	ba_error_log( array(
+		'author_link_bp_1' => array(
+			'og_link'  => $link,
+			'user_id'  => $user_id,
+			'nicename' => $nicename,
+			'ba_eas'   => (array) ba_eas(),
+			'strpos'   => strpos( $link, '%ba_eas_author_role%' ),
+			'filters'  => $wp_filter
+		)
+	) );
 
 	// Add a role slug if we're doing role based author bases
 	if ( ba_eas_do_role_based_author_base() && false !== strpos( $link, '%ba_eas_author_role%' ) ) {
 
 		// Setup the user
 		$user = get_userdata( $user_id );
+
+		ba_error_log( array(
+			'author_link_bp_2' => array(
+				'og_link'  => $link,
+				'user_id'  => $user_id,
+				'nicename' => $nicename,
+				'ba_eas'   => (array) ba_eas(),
+				'strpos'   => strpos( $link, '%ba_eas_author_role%' ),
+				'filters'  => $wp_filter,
+				'user'     => $user
+			)
+		) );
 
 		// Return the link if we don't have a user
 		if ( empty( $user->ID ) ) {
@@ -283,10 +307,34 @@ function ba_eas_author_link( $link = '', $user_id = 0, $nicename = '' ) {
 
 		// Add the role slug to the link
 		$link = str_replace( '%ba_eas_author_role%', $slug, $link );
+
+		ba_error_log( array(
+			'author_link_bp_3' => array(
+				'og_link'  => $link,
+				'user_id'  => $user_id,
+				'nicename' => $nicename,
+				'ba_eas'   => (array) ba_eas(),
+				'strpos'   => strpos( $link, '%ba_eas_author_role%' ),
+				'filters'  => $wp_filter,
+				'user'     => $user,
+				'role'     => $role,
+				'slug'     => $slug,
+				'link'     => $link
+			)
+		) );
+
 	}
 
 	// Return the link
 	return $link;
+}
+
+function ba_error_log( $data = '' ) {
+	if ( is_array( $data ) || is_object( $data ) ) {
+		error_log( json_encode( $data, JSON_PRETTY_PRINT ) );
+	} else {
+		error_log( $data );
+	}
 }
 
 /**
