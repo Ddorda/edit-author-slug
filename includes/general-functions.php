@@ -274,6 +274,7 @@ function ba_eas_author_link( $link = '', $user_id = 0, $nicename = '' ) {
 		}
 
 		// Grab the first listed role
+		$role = '';
 		if ( !empty( $user->roles ) && is_array( $user->roles ) ) {
 			$role = array_shift( $user->roles );
 		}
